@@ -2,8 +2,8 @@
 
 This is a short tutorial of converting a video to an Excel workbook, as an effort to reproduce the results of [this viral video](https://www.facebook.com/watch/?v=1963929290331098) from a while ago.
 
-Tested on Apple M1, macOS Sonoma 14.0, Office 365 whatever version as of Oct 2023.
-
+Script tested on Apple M1, macOS Sonoma 14.0, Office 365 whatever version as of Oct 2023. 
+Output XLSX file works on Office 365 for Mac, as well as Office 2010 on a Windows 7 VM (and it plays much faster than realtime!!)
 
 Sample workbook of the first 256 frames of [Mirai wa Kaze no You ni](https://www.youtube.com/watch?v=l6t2PFGRgbY) is available in the Releases section.
 
