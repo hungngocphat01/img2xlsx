@@ -4,7 +4,7 @@ This is a short tutorial of converting a video to an Excel workbook, as an effor
 
 Tested on Apple M1, macOS Sonoma 14.0, Office 365 whatever version as of Oct 2023.
 
-LibreOffice is not compatible with this script, since internally it seems to convert OOXML to ODT upon opening the file and the process is very very very slow (it's single threaded by default). You could try it but I tried and gave up.
+LibreOffice is not compatible with this script, since internally it seems to convert OOXML to ODT upon opening the file and the process is very very very slow (it's single threaded by default). You could try it but I tried and gave up. You can try porting the code to write directly to ODT instead of XLSX.
 
 Sample workbook of the first 256 frames of [Mirai wa Kaze no You ni](https://www.youtube.com/watch?v=l6t2PFGRgbY) is available in the Releases section.
 
@@ -44,6 +44,8 @@ All commands in this section are written with Unix in mind. If you use Windows, 
 
 ## Steps
 
+The config suggested in this section is to "play" the video in Excel _in real time_, without the need of screen-recording it and speed it up later. If this is not your case, you can opt for a higher framerate and resolution.
+
 1. Download the video you need to convert and put it somewhere
 2. Extract the frames to some directory
    ```bash
@@ -67,7 +69,7 @@ All commands in this section are written with Unix in mind. If you use Windows, 
    You can run `python img2xlsx.py --help` to see more customizable params or use `--head N` to only generate the first N frames. It's quite limited. If you need more customization just modify the code instead.
    This script does the following tasks:
    - Load each image and quantize the colors to the [X11 256-color palette](https://www.ditig.com/256-colors-cheat-sheet)
-   - Write the image pixel-by-pixel into each sheet
+   - Write the image pixel-by-pixel into each sheet using Pillow and openpyxl
 
 ## Example end-to-end workflow
 
