@@ -1,10 +1,13 @@
 # Video to XLSX
 
+<img alt="screenshot" src="assets/screenshot.png" height=500>
+
+https://github.com/hungngocphat01/img2xlsx/assets/49612476/cc50a6dc-8b9e-4b7f-9074-588decbe4ef3
+
 This is a short tutorial of converting a video to an Excel workbook, as an effort to reproduce the results of [this viral video](https://www.facebook.com/watch/?v=1963929290331098) from a while ago.
 
-Tested on Apple M1, macOS Sonoma 14.0, Office 365 whatever version as of Oct 2023.
-
-LibreOffice is not compatible with this script, since internally it seems to convert OOXML to ODT upon opening the file and the process is very very very slow (it's single threaded by default). You could try it but I tried and gave up.
+Script tested on Apple M1, macOS Sonoma 14.0, Office 365 whatever version as of Oct 2023. 
+Output XLSX file works on Office 365 for Mac, as well as Office 2010 on a Windows 7 VM (and it plays much faster than realtime!! In the video I slowly pressed the PageDn button manually though)
 
 Sample workbook of the first 256 frames of [Mirai wa Kaze no You ni](https://www.youtube.com/watch?v=l6t2PFGRgbY) is available in the Releases section.
 
@@ -13,23 +16,26 @@ Sample workbook of the first 256 frames of [Mirai wa Kaze no You ni](https://www
 - ffmpeg
 - Python 3.10+
 - This repository
+- Microsoft Excel. LibreOffice is not compatible with this script, since internally it seems to convert OOXML to ODT upon opening the file and the process is very very very slow. Even a free trial of Excel 2010 on a Win 7 VM opens the full workbook with 457 frames instantly!!
 
 This tutorial expects that you are already a technical user. Read the instruction carefully. If you find the instruction not clear, read the code. It's quite short ;)
+
+All commands in this section are written with Unix in mind. If you use Windows, convert the commands yourself.
 
 ## Backstory
 
 <details>
   <summary>Expand</summary>
-Back in 2018, I came across a video of someone using Excel to play the anime opening "Only My Railgun". I thought it was such a cool, outside-the-box idea! Being a total tech geek, I tried to recreate it myself with C#.NET and the Microsoft.Office.Interop API to fill each cell with the color of the matching pixel. But it was way too slow to actually work. Parallel programming? As if! I was just a high school student and didn't know nothing about that advanced stuff. Actually, the approach in this repo still does not use concurrency because the openpyxl API is not thread-safe per workbook. It could work regardless, but I have not tried.
+Back in 2018, I came across a video of someone using Excel to play the anime opening "only my railgun". Wow! It's so cool, I thought. Being a total tech "geek", I tried to recreate it myself with C#.NET and the Microsoft.Office.Interop API to fill each cell with the color of the matching pixel. But it was way too slow to actually work. Parallel programming was not an option since I was a high school student and knew nothing about it. Actually, the approach in this repo still does not use concurrency because the openpyxl API is not thread-safe per workbook. It could work regardless, but I have not tried.  
 
-The major issue was that if you fill in the colors as-is, Excel will error out and say the file is corrupted. This is because of a [known limitation](https://learn.microsoft.com/en-us/office/troubleshoot/excel/too-many-different-cell-formats-in-excel) where Excel workbooks can only have 64,000 unique cell formatting combinations. With each frame being 160x90 pixels, that's 14,400 possible color combos per sheet. So you can only fit like 4.44 frames before hitting the limit. That lined up with what I saw - I could only fill 4 or 5 sheets before corrupting the workbook.
 
-Several days ago, I revisited this idea after a few years. I have come to know a lot more about how stuff work under the hood, as well as the dirty techniques to preprocess various types of data, including images.
+The major issue was that if you fill in the colors as-is, Excel will error out and say the file is corrupted. This is because of a [known limitation](https://learn.microsoft.com/en-us/office/troubleshoot/excel/too-many-different-cell-formats-in-excel) where Excel workbooks can only have 64,000 unique cell formatting combinations. With each frame being 160x90 pixels, that's 14,400 possible color combos per sheet. So you can only fit like 4.44 frames before hitting the limit. That lined up with what I saw - I could only fill 4 or 5 sheets before corrupting the workbook.  
+
+
+Several days ago, I revisited this idea after a few years. I have come to know a lot more about how stuff work under the hood, as well as the dirty techniques to preprocess various types of data, including images. The hidden weapon is color quantization. This knocks down the number of color combinations to just 128 (as in this tutorial).
 </details>
 
 ## Installation
-
-All commands in this section are written with Unix in mind. If you use Windows, convert the commands yourself.
 
 1. Make sure you fullfill the requirements described above
 2. Create a Python virtualenv
@@ -43,6 +49,8 @@ All commands in this section are written with Unix in mind. If you use Windows, 
    ```
 
 ## Steps
+
+The config suggested in this section is to "play" the video in Excel _in real time_, without the need of screen-recording it and speed it up later. If this is not your case, you can opt for a higher framerate and resolution.
 
 1. Download the video you need to convert and put it somewhere
 2. Extract the frames to some directory
@@ -67,7 +75,7 @@ All commands in this section are written with Unix in mind. If you use Windows, 
    You can run `python img2xlsx.py --help` to see more customizable params or use `--head N` to only generate the first N frames. It's quite limited. If you need more customization just modify the code instead.
    This script does the following tasks:
    - Load each image and quantize the colors to the [X11 256-color palette](https://www.ditig.com/256-colors-cheat-sheet)
-   - Write the image pixel-by-pixel into each sheet
+   - Write the image pixel-by-pixel into each sheet using Pillow and openpyxl
 
 ## Example end-to-end workflow
 
