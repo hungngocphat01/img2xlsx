@@ -6,6 +6,12 @@ https://github.com/hungngocphat01/img2xlsx/assets/49612476/cc50a6dc-8b9e-4b7f-90
 
 This is a short tutorial of converting a video to an Excel workbook, as an effort to reproduce the results of [this viral video](https://www.facebook.com/watch/?v=1963929290331098) from a while ago.
 
+**A thousand-mile view of how this works**
+- Break the original video into individual jpeg frames. Fps is also reduced for faster processing speed
+- Convert frames to 8-bit color space to overcome the formatting limit of Excel (discussed below)
+- Paint sheets cell-by-cell corresponding to pixels of the extracted images. Each frame is in one sheet
+- "Play" the video by quickly switch between sheets
+
 Script tested on Apple M1, macOS Sonoma 14.0, Office 365 whatever version as of Oct 2023. 
 Output XLSX file works on Office 365 for Mac, as well as Office 2010 on a Windows 7 VM (and it plays much faster than realtime!! In the video I slowly pressed the PageDn button manually though)
 
