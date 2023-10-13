@@ -12,8 +12,11 @@ This is a short tutorial of converting a video to an Excel workbook, as an effor
 - Paint sheets cell-by-cell corresponding to pixels of the extracted images. Each frame is in one sheet
 - "Play" the video by quickly switch between sheets
 
-Script tested on Apple M1, macOS Sonoma 14.0, Office 365 whatever version as of Oct 2023. 
-Output XLSX file works on Office 365 for Mac, as well as Office 2010 on a Windows 7 VM (and it plays much faster than realtime!! In the video I slowly pressed the PageDn button manually though)
+Script tested on Apple M1, macOS Sonoma 14.0 Should work on any other OS given the correct environment.
+
+Output XLSX file works on:
+- Office 365 for Mac
+- Office 2010 on a Windows 7 VM (and it plays much faster than realtime!! In the video I slowly pressed the PageDn button manually though)
 
 Sample workbook of the first 256 frames of [Mirai wa Kaze no You ni](https://www.youtube.com/watch?v=l6t2PFGRgbY) is available in the Releases section.
 
@@ -56,7 +59,7 @@ Several days ago, I revisited this idea after a few years. I have come to know a
 
 ## Steps
 
-The config suggested in this section is to "play" the video in Excel _in real time_, without the need of screen-recording it and speed it up later. If this is not your case, you can opt for a higher framerate and resolution.
+The config suggested in this section is to "play" the video in Excel _in realtime_, without the need of screen-recording it and speed it up later. If this is not your case, you can opt for a higher framerate and resolution.
 
 1. Download the video you need to convert and put it somewhere
 2. Extract the frames to some directory
@@ -100,7 +103,7 @@ ffmpeg -i /Users/me/Downloads/some-video.mp4 \
    "/Users/me/Pictures/the-frames/%04d.jpg"
 
 # Convert frames to excel
-source /Users/me/envs/
+source /Users/me/envs/img2xlsx/activate
 python img2xlsx.py \
       --frames-dir /Users/me/Pictures/the-frames \
       --output output.xlsx \
@@ -118,7 +121,7 @@ To "play" it, you have two (actually three) options:
 - Use OfficeScript
 - Manually press Ctrl+PgDown to switch to the next sheet ;). On non-fullsize Mac keyboards it's Control+Fn+DownArrow
 
-I highly recommend OfficeScript since it's pretty easy to write (since it's literally TypeScript) and I only tested that option along with the last one. No VBA `Sleep` approach worked with my Mac setup so far.
+I only tested the OfficeScript option along with the last one. No VBA `Sleep` approach worked with my Mac setup so far.
 
 The script that I used:
 
